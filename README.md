@@ -14,11 +14,11 @@ Tasks:
 
     Bugs to Fix:
 
-        - Game is Not playable from "IntroMenu" Scene.
+        - Game is Not playable from "IntroMenu" Scene. DONE
 
-        - Weapon "Weapon_Launcher" is not functioning.
+        - Weapon "Weapon_Launcher" is not functioning. DONE
 
-        - "Enemy_Turret" is getting destroyed at the start of game.
+        - "Enemy_Turret" is getting destroyed at the start of game. DONE
 
 
     Features To Add:

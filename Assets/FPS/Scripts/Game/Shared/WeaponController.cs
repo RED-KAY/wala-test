@@ -375,6 +375,7 @@ namespace Unity.FPS.Game
                     if (inputHeld)
                     {
                         TryBeginCharge();
+                        Debug.Log("IsCharging: " + IsCharging.ToString());
                     }
 
                     // Check if we released charge or if the weapon shoot autmatically when it's fully charged
@@ -414,7 +415,7 @@ namespace Unity.FPS.Game
                 UseAmmo(AmmoUsedOnStartCharge);
 
                 LastChargeTriggerTimestamp = Time.time;
-                IsCharging = false;
+                IsCharging = true;
 
                 return true;
             }

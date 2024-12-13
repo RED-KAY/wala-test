@@ -221,6 +221,7 @@ namespace Unity.FPS.AI
             // at every frame, this tests for conditions to kill the enemy
             if (transform.position.y < SelfDestructYHeight)
             {
+                Debug.Log(gameObject.name + " out of bound! Getting destoryed!");
                 Destroy(gameObject);
                 return;
             }

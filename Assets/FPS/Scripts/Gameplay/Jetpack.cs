@@ -1,4 +1,5 @@
-﻿using Unity.FPS.Game;
+﻿using System.Threading;
+using Unity.FPS.Game;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -51,6 +52,16 @@ namespace Unity.FPS.Gameplay
 
         public UnityAction<bool> OnUnlockJetpack;
 
+        [Header("Slam")]
+        private bool m_SlammingDown;
+        private bool m_JetpackIsInUse;
+        [SerializeField] float m_SlamTimeWindow = 0.5f;
+        [SerializeField] float m_SlamDamageMultiplier, m_SlamBaseDamage;
+        float m_SlamDamageToApply;
+        public AudioClip m_SlamSFX;
+
+        Health m_Health;
+
         void Start()
         {
             IsJetpackUnlocked = IsJetpackUnlockedAtStart;
@@ -66,6 +77,15 @@ namespace Unity.FPS.Gameplay
 
             AudioSource.clip = JetpackSfx;
             AudioSource.loop = true;
+
+            m_PlayerCharacterController.OnStanceChanged += OnStanceChanged;
+
+            m_Health = GetComponent<Health>();
+        }
+
+        private void OnDisable()
+        {
+            m_PlayerCharacterController.OnStanceChanged -= OnStanceChanged;
         }
 
         void Update()
@@ -74,16 +94,33 @@ namespace Unity.FPS.Gameplay
             if (IsPlayergrounded())
             {
                 m_CanUseJetpack = false;
+                if (m_SlammingDown)
+                {
+                    m_SlammingDown = false;
+                    m_Health.TakeDamage(m_SlamDamageToApply, this.gameObject);
+
+                    AudioSource.clip = m_SlamSFX;
+                    AudioSource.loop = false;
+                    AudioSource.Play();
+
+                    //Debug.Log("Slam damage to apply: " + m_SlamDamageToApply);
+                }
             }
-            else if (!m_PlayerCharacterController.HasJumpedThisFrame && m_InputHandler.GetJumpInputDown())
+            else if (!m_PlayerCharacterController.HasJumpedThisFrame && m_InputHandler.GetJumpInputDown() && !m_SlammingDown)
             {
                 m_CanUseJetpack = true;
+                if (!AudioSource.loop)
+                {
+                    AudioSource.clip = JetpackSfx;
+                    AudioSource.loop = true;
+                }
+
             }
 
             // jetpack usage
-            bool jetpackIsInUse = m_CanUseJetpack && IsJetpackUnlocked && CurrentFillRatio > 0f &&
+            m_JetpackIsInUse = m_CanUseJetpack && IsJetpackUnlocked && CurrentFillRatio > 0f &&
                                   m_InputHandler.GetJumpInputHeld();
-            if (jetpackIsInUse)
+            if (m_JetpackIsInUse)
             {
                 // store the last time of use for refill delay
                 m_LastTimeOfUse = Time.time;
@@ -149,6 +186,34 @@ namespace Unity.FPS.Gameplay
             IsJetpackUnlocked = true;
             m_LastTimeOfUse = Time.time;
             return true;
+        }
+
+        void OnStanceChanged(bool crouched)
+        {
+            float delta = Time.time - m_LastTimeOfUse;
+            bool cond1 = m_JetpackIsInUse && crouched;
+            bool cond2 = crouched && (delta <= m_SlamTimeWindow);
+            //Debug.Log("Jetpack In Use: " + m_JetpackIsInUse + ", Crouched: " + crouched + ", delta: " + delta + ", cond2: " + cond2.ToString() + ", cond1: " + cond1.ToString());
+            if (cond1 || cond2)
+            {
+                //Debug.Log("Slam down!");
+                m_SlammingDown = true;
+
+                Ray r = new Ray(transform.position, -1 * transform.up);
+                RaycastHit hit = new RaycastHit();
+                if(Physics.Raycast(r, out hit, Mathf.Infinity, m_PlayerCharacterController.GroundCheckLayers))
+                {
+                    float slamHeight = hit.distance;
+                    //Debug.Log("SlamHeight: " + slamHeight);
+                    m_SlamDamageToApply = m_SlamBaseDamage * Mathf.Pow(slamHeight, 2) * m_SlamDamageMultiplier;
+                }
+
+                m_PlayerCharacterController.CharacterVelocity = new Vector3(
+                    m_PlayerCharacterController.CharacterVelocity.x,
+                    -20f, 
+                    m_PlayerCharacterController.CharacterVelocity.z
+                );
+            }
         }
     }
 }
