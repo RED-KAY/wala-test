@@ -58,6 +58,7 @@ namespace Unity.FPS.Gameplay
         [SerializeField] float m_SlamTimeWindow = 0.5f;
         [SerializeField] float m_SlamDamageMultiplier, m_SlamBaseDamage;
         float m_SlamDamageToApply;
+        public AudioSource m_SlammingAudioSource;
         public AudioClip m_SlamSFX;
 
         Health m_Health;
@@ -77,6 +78,8 @@ namespace Unity.FPS.Gameplay
 
             AudioSource.clip = JetpackSfx;
             AudioSource.loop = true;
+
+            m_SlammingAudioSource.clip = m_SlamSFX;
 
             m_PlayerCharacterController.OnStanceChanged += OnStanceChanged;
 
@@ -99,9 +102,7 @@ namespace Unity.FPS.Gameplay
                     m_SlammingDown = false;
                     m_Health.TakeDamage(m_SlamDamageToApply, this.gameObject);
 
-                    AudioSource.clip = m_SlamSFX;
-                    AudioSource.loop = false;
-                    AudioSource.Play();
+                    m_SlammingAudioSource.Play();
 
                     //Debug.Log("Slam damage to apply: " + m_SlamDamageToApply);
                 }
@@ -109,12 +110,6 @@ namespace Unity.FPS.Gameplay
             else if (!m_PlayerCharacterController.HasJumpedThisFrame && m_InputHandler.GetJumpInputDown() && !m_SlammingDown)
             {
                 m_CanUseJetpack = true;
-                if (!AudioSource.loop)
-                {
-                    AudioSource.clip = JetpackSfx;
-                    AudioSource.loop = true;
-                }
-
             }
 
             // jetpack usage
