@@ -23,11 +23,11 @@ Tasks:
 
     Features To Add:
 
-        -Add the ability to assign color to compass makers according to enemy type.
+        -Add the ability to assign color to compass makers according to enemy type. DONE
  
-        -Make the Player slam down on the ground if it starts crouching will using Jetpack.
-	        # Player should receive damage according to its height, other then the fall damage.
-	        # Add field to play a SFX on Slam.
+        -Make the Player slam down on the ground if it starts crouching will using Jetpack. DONE
+	        # Player should receive damage according to its height, other then the fall damage. DONE
+	        # Add field to play a SFX on Slam. DONE
 
         -Make enemy "Enemy_HoverBot_v2" move up or down to dodge whenever it takes damage.
 	        # Fields:
