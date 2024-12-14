@@ -8,13 +8,13 @@ public class HoverBotDodge : MonoBehaviour
     Health m_Health;
 
     [Header("Dodge Settings")]
-    public float m_Speed = 1f;            // How fast to move between positions
-    public float m_Offset = 1f;           // Vertical distance from initial position
-    public AnimationCurve m_EasingCurve;  // Easing curve for smoother movement
+    public float m_Speed = 1f;            
+    public float m_Offset = 1f;           
+    public AnimationCurve m_EasingCurve;  
 
-    private Vector3 m_InitialPos;   // The starting position of the robot
-    private Vector3[] m_Positions;  // The three possible positions: [down, initial, up]
-    private int m_CurrentIndex = 1; // 0 = down, 1 = initial, 2 = up (default to initial)
+    private Vector3 m_InitialPos;   
+    private Vector3[] m_Positions;  
+    private int m_CurrentIndex = 1; 
 
     private bool m_IsDodging = false;
 
@@ -25,10 +25,8 @@ public class HoverBotDodge : MonoBehaviour
         m_Health = GetComponent<Health>();
         m_Health.OnDamaged += OnDamage;
 
-        // Record the initial position from the prefab
         m_InitialPos = m_PartToMove.localPosition;
 
-        // Calculate the three possible positions
         m_Positions = new Vector3[3];
         m_Positions[0] = m_InitialPos - Vector3.up * m_Offset;
         m_Positions[1] = m_InitialPos;
@@ -46,7 +44,6 @@ public class HoverBotDodge : MonoBehaviour
         Dodge();
     }
 
-    // Call this method to trigger a dodge. It will choose one of the two other positions.
     public void Dodge()
     {
         if (m_IsDodging)
@@ -54,19 +51,15 @@ public class HoverBotDodge : MonoBehaviour
 
         //Debug.Log("Dodge!");
 
-        // Find a random other position that is not the current one.
-        // There are always two choices: if current = 1 (initial), then picks either 0 (down) or 2 (up).
-        // If current = 0 or 2, picks from {1, (the other non-current position)}.
-
         int[] possibleIndices = { 0, 1, 2 };
-        // Filter out the current index
+
         var possibleNewPositions = System.Array.FindAll(possibleIndices, i => i != m_CurrentIndex);
         int newIndex = possibleNewPositions[Random.Range(0, possibleNewPositions.Length)];
 
         StartCoroutine(DodgeToPosition(newIndex));
     }
 
-    private System.Collections.IEnumerator DodgeToPosition(int targetIndex)
+    private IEnumerator DodgeToPosition(int targetIndex)
     {
         m_IsDodging = true;
 
