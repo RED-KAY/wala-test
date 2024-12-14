@@ -376,8 +376,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14b7698ec50c85c44a849a968dc1d57d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CompassMarkerPrefab: {fileID: 4125838790012652590, guid: 513785daf84f2a243b0cda079e6835cd,
-    type: 3}
+  m_MarkerType: 3
   TextDirection: 
 --- !u!195 &3444686158330356048
 NavMeshAgent:

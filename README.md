@@ -29,9 +29,9 @@ Tasks:
 	        # Player should receive damage according to its height, other then the fall damage. DONE
 	        # Add field to play a SFX on Slam. DONE
 
-        -Make enemy "Enemy_HoverBot_v2" move up or down to dodge whenever it takes damage.
+        -Make enemy "Enemy_HoverBot_v2" move up or down to dodge whenever it takes damage. DONE
 	        # Fields:
-		        Speed- How fast the bot will move.
-		        Offset- Bot be at 3 positions, its initial position in prefab and +/- offset of it.
+		        Speed- How fast the bot will move. DONE
+		        Offset- Bot be at 3 positions, its initial position in prefab and +/- offset of it. DONE
 		        (It can dodge to any of the two position other the current)
-		        Easing Curve- To be able to adjust the motion of the dodge.
+		        Easing Curve- To be able to adjust the motion of the dodge. DONE
